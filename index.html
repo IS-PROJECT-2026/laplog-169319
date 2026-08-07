@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LapLog — Workout Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="field">
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">●</span>
+      <span class="brand-name">LapLog</span>
+    </div>
+    <div class="topbar-stat">
+      <span class="topbar-stat-value" id="streakValue">0</span>
+      <span class="topbar-stat-label">day streak</span>
+    </div>
+  </header>
+
+  <section class="hero">
+    <p class="eyebrow">Today's session</p>
+    <h1 class="hero-time" id="sessionClock">00:00</h1>
+    <p class="hero-sub">Time since your first set today</p>
+
+    <!-- Signature element: lap track -->
+    <div class="lap-track" id="lapTrack" aria-label="Sets logged today">
+      <div class="lap-track-fill" id="lapTrackFill"></div>
+    </div>
+    <p class="lap-track-caption" id="lapCaption">No sets logged yet — add your first one below</p>
+  </section>
+
+  <section class="panel">
+    <h2 class="panel-title">Log a set</h2>
+    <form id="logForm" class="log-form">
+      <div class="field-group">
+        <label for="exercise">Exercise</label>
+        <input type="text" id="exercise" placeholder="e.g. Back squat" required autocomplete="off">
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label for="weight">Weight (kg)</label>
+          <input type="number" id="weight" inputmode="decimal" min="0" step="0.5" placeholder="0" required>
+        </div>
+        <div class="field-group">
+          <label for="reps">Reps</label>
+          <input type="number" id="reps" inputmode="numeric" min="1" step="1" placeholder="0" required>
+        </div>
+      </div>
+      <button type="submit" class="btn-primary">Log set</button>
+    </form>
+  </section>
+
+  <section class="panel">
+    <div class="panel-header-row">
+      <h2 class="panel-title">This week</h2>
+      <span class="panel-title-sub" id="weekRange"></span>
+    </div>
+    <div class="volume-chart" id="volumeChart"></div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-header-row">
+      <h2 class="panel-title">History</h2>
+      <button class="btn-ghost" id="clearBtn" type="button">Clear all</button>
+    </div>
+    <ul class="history-list" id="historyList">
+      <li class="history-empty">Nothing logged yet. Your sets will line up here.</li>
+    </ul>
+  </section>
+
+  <footer class="footer">
+    <p>LapLog stores everything in your browser — nothing leaves this device.</p>
+  </footer>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
