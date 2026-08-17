@@ -14,7 +14,7 @@ history — all stored locally in the browser via `localStorage`.
 
 ## Live demo
 
-[View LapLog live](https://IS-PROJECT-2026.github.io/laplog-<ADMISSION_NUMBER>/)
+[View LapLog live](https://IS-PROJECT-2026.github.io/laplog-169319/)
 
 ## Project structure
 
