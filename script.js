@@ -18,7 +18,15 @@ const els = {
   volumeChart: document.getElementById('volumeChart'),
   historyList: document.getElementById('historyList'),
   clearBtn: document.getElementById('clearBtn'),
+  exerciseSuggestions: document.getElementById('exerciseSuggestions'),
 };
+
+function renderExerciseSuggestions(sets) {
+  const unique = [...new Set(sets.map(s => s.exercise))];
+  els.exerciseSuggestions.innerHTML = unique
+    .map(name => `<option value="${name.replace(/"/g, '&quot;')}"></option>`)
+    .join('');
+}
 
 function loadSets() {
   try {
@@ -71,6 +79,7 @@ function render() {
   renderStreak(sets);
   renderVolumeChart(sets);
   renderHistory(sets);
+  renderExerciseSuggestions(sets); 
 }
 
 function renderSessionClock(sets) {
@@ -216,6 +225,10 @@ els.logForm.addEventListener('submit', (event) => {
   els.logForm.reset();
   els.exercise.focus();
   render();
+
+  const panel = document.getElementById('logPanel');
+  panel.classList.add('just-logged');
+  setTimeout(() => panel.classList.remove('just-logged'), 650);
 });
 
 els.clearBtn.addEventListener('click', () => {

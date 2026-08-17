@@ -345,3 +345,24 @@ body {
 @media (max-width: 380px) {
   .hero-time { font-size: 48px; }
 }
+
+.field-group input:hover {
+  border-color: var(--navy-700);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+@keyframes flash-log {
+  0% { box-shadow: 0 0 0 0 rgba(214, 255, 63, 0.5); }
+  100% { box-shadow: 0 0 0 8px rgba(214, 255, 63, 0); }
+}
+
+.panel.just-logged {
+  animation: flash-log 0.6s ease-out;
+}
+
+@media (max-width: 380px) {
+  .field-row { flex-direction: column; gap: 14px; }
+}
