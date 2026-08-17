@@ -201,13 +201,20 @@ function renderHistory(sets) {
 els.logForm.addEventListener('submit', (event) => {
   event.preventDefault();
 
-  const exercise = els.exercise.value.trim();
-  const weight = parseFloat(els.weight.value);
-  const reps = parseInt(els.reps.value, 10);
-
-  if (!exercise || Number.isNaN(weight) || Number.isNaN(reps)) {
+  if (!els.logForm.checkValidity()) {
+    els.logForm.reportValidity();
     return;
   }
+
+  const exercise = els.exercise.value.trim();
+  const weight = parseFloat(els.weight.value);
+  const repsRaw = els.reps.value;
+
+  if (!exercise || Number.isNaN(weight) || !/^\d+$/.test(repsRaw)) {
+    return;
+  }
+
+  const reps = parseInt(repsRaw, 10);
 
   const sets = loadSets();
   sets.push(sanitizeSet({ exercise, weight, reps }));
