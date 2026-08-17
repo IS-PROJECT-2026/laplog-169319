@@ -18,7 +18,15 @@ const els = {
   volumeChart: document.getElementById('volumeChart'),
   historyList: document.getElementById('historyList'),
   clearBtn: document.getElementById('clearBtn'),
+  exerciseSuggestions: document.getElementById('exerciseSuggestions'),
 };
+
+function renderExerciseSuggestions(sets) {
+  const unique = [...new Set(sets.map(s => s.exercise))];
+  els.exerciseSuggestions.innerHTML = unique
+    .map(name => `<option value="${name.replace(/"/g, '&quot;')}"></option>`)
+    .join('');
+}
 
 function loadSets() {
   try {
@@ -71,11 +79,17 @@ function render() {
   renderStreak(sets);
   renderVolumeChart(sets);
   renderHistory(sets);
+  renderExerciseSuggestions(sets); 
+}
+
+function getTodaysSets(sets) {
+  const now = new Date();
+  return sets.filter(s => isSameDay(new Date(s.timestamp), now));
 }
 
 function renderSessionClock(sets) {
-  const now = new Date();
-  const todaysSets = sets.filter(s => isSameDay(new Date(s.timestamp), now));
+    const now = new Date();
+  const todaysSets = getTodaysSets(sets);
   if (todaysSets.length === 0) {
     els.sessionClock.textContent = '00:00';
     return;
@@ -85,8 +99,7 @@ function renderSessionClock(sets) {
 }
 
 function renderLapTrack(sets) {
-  const now = new Date();
-  const todaysSets = sets.filter(s => isSameDay(new Date(s.timestamp), now));
+  const todaysSets = getTodaysSets(sets);
   const count = Math.min(todaysSets.length, MAX_LAPS_VISIBLE);
   const pct = todaysSets.length === 0 ? 0 : Math.round((count / MAX_LAPS_VISIBLE) * 100);
   els.lapTrackFill.style.width = `${pct}%`;
@@ -168,6 +181,8 @@ function renderHistory(sets) {
 
   const sorted = [...sets].sort((a, b) => b.timestamp - a.timestamp);
 
+  const prIds = computePersonalBests(sets);
+
   sorted.forEach(set => {
     const li = document.createElement('li');
     li.className = 'history-item';
@@ -188,6 +203,13 @@ function renderHistory(sets) {
     main.appendChild(exerciseEl);
     main.appendChild(metaEl);
 
+    if (prIds.has(set.id)) {
+      const badge = document.createElement('span');
+      badge.className = 'hi-badge';
+      badge.textContent = 'PR';
+      main.appendChild(badge);
+    }
+
     const figures = document.createElement('span');
     figures.className = 'hi-figures';
     figures.textContent = `${set.weight}kg × ${set.reps}`;
@@ -198,16 +220,37 @@ function renderHistory(sets) {
   });
 }
 
+function computePersonalBests(sets) {
+  const bestSoFar = new Map();
+  const prIds = new Set();
+  const chronological = [...sets].sort((a, b) => a.timestamp - b.timestamp);
+  chronological.forEach(set => {
+    const currentBest = bestSoFar.get(set.exercise) ?? 0;
+    if (set.weight > currentBest) {
+      prIds.add(set.id);
+      bestSoFar.set(set.exercise, set.weight);
+    }
+  });
+  return prIds;
+}
+
 els.logForm.addEventListener('submit', (event) => {
   event.preventDefault();
 
-  const exercise = els.exercise.value.trim();
-  const weight = parseFloat(els.weight.value);
-  const reps = parseInt(els.reps.value, 10);
-
-  if (!exercise || Number.isNaN(weight) || Number.isNaN(reps)) {
+  if (!els.logForm.checkValidity()) {
+    els.logForm.reportValidity();
     return;
   }
+
+  const exercise = els.exercise.value.trim();
+  const weight = parseFloat(els.weight.value);
+  const repsRaw = els.reps.value;
+
+  if (!exercise || Number.isNaN(weight) || !/^\d+$/.test(repsRaw)) {
+    return;
+  }
+
+  const reps = parseInt(repsRaw, 10);
 
   const sets = loadSets();
   sets.push(sanitizeSet({ exercise, weight, reps }));
@@ -216,6 +259,10 @@ els.logForm.addEventListener('submit', (event) => {
   els.logForm.reset();
   els.exercise.focus();
   render();
+
+  const panel = document.getElementById('logPanel');
+  panel.classList.add('just-logged');
+  setTimeout(() => panel.classList.remove('just-logged'), 650);
 });
 
 els.clearBtn.addEventListener('click', () => {
@@ -223,6 +270,8 @@ els.clearBtn.addEventListener('click', () => {
   localStorage.removeItem(STORAGE_KEY);
   render();
 });
+
+
 
 // Keep the session clock ticking while the tab is open.
 setInterval(() => renderSessionClock(loadSets()), 30000);
