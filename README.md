@@ -34,6 +34,7 @@ script.js    — data layer, rendering, event handlers
 - [ ] Export history as CSV
 - [ ] Per-exercise progress graphs
 
+
 ## Tech
 
 Plain HTML, CSS, and JavaScript — no build step, no framework, no backend.
