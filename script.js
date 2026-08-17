@@ -276,4 +276,4 @@ els.clearBtn.addEventListener('click', () => {
 // Keep the session clock ticking while the tab is open.
 setInterval(() => renderSessionClock(loadSets()), 30000);
 
-render();
+render();// Session timeout: 30 minutes
