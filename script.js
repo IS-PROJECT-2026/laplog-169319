@@ -168,6 +168,8 @@ function renderHistory(sets) {
 
   const sorted = [...sets].sort((a, b) => b.timestamp - a.timestamp);
 
+  const prIds = computePersonalBests(sets);
+
   sorted.forEach(set => {
     const li = document.createElement('li');
     li.className = 'history-item';
@@ -188,6 +190,13 @@ function renderHistory(sets) {
     main.appendChild(exerciseEl);
     main.appendChild(metaEl);
 
+    if (prIds.has(set.id)) {
+      const badge = document.createElement('span');
+      badge.className = 'hi-badge';
+      badge.textContent = 'PR';
+      main.appendChild(badge);
+    }
+
     const figures = document.createElement('span');
     figures.className = 'hi-figures';
     figures.textContent = `${set.weight}kg × ${set.reps}`;
@@ -196,6 +205,20 @@ function renderHistory(sets) {
     li.appendChild(figures);
     els.historyList.appendChild(li);
   });
+}
+
+function computePersonalBests(sets) {
+  const bestSoFar = new Map();
+  const prIds = new Set();
+  const chronological = [...sets].sort((a, b) => a.timestamp - b.timestamp);
+  chronological.forEach(set => {
+    const currentBest = bestSoFar.get(set.exercise) ?? 0;
+    if (set.weight > currentBest) {
+      prIds.add(set.id);
+      bestSoFar.set(set.exercise, set.weight);
+    }
+  });
+  return prIds;
 }
 
 els.logForm.addEventListener('submit', (event) => {

@@ -345,3 +345,16 @@ body {
 @media (max-width: 380px) {
   .hero-time { font-size: 48px; }
 }
+
+.hi-badge {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 2px 6px;
+  width: fit-content;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--navy-950);
+  background: var(--lime);
+  border-radius: 4px;
+}
