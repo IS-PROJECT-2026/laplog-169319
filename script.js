@@ -73,9 +73,14 @@ function render() {
   renderHistory(sets);
 }
 
-function renderSessionClock(sets) {
+function getTodaysSets(sets) {
   const now = new Date();
-  const todaysSets = sets.filter(s => isSameDay(new Date(s.timestamp), now));
+  return sets.filter(s => isSameDay(new Date(s.timestamp), now));
+}
+
+function renderSessionClock(sets) {
+    const now = new Date();
+  const todaysSets = getTodaysSets(sets);
   if (todaysSets.length === 0) {
     els.sessionClock.textContent = '00:00';
     return;
@@ -85,8 +90,7 @@ function renderSessionClock(sets) {
 }
 
 function renderLapTrack(sets) {
-  const now = new Date();
-  const todaysSets = sets.filter(s => isSameDay(new Date(s.timestamp), now));
+  const todaysSets = getTodaysSets(sets);
   const count = Math.min(todaysSets.length, MAX_LAPS_VISIBLE);
   const pct = todaysSets.length === 0 ? 0 : Math.round((count / MAX_LAPS_VISIBLE) * 100);
   els.lapTrackFill.style.width = `${pct}%`;
@@ -223,6 +227,8 @@ els.clearBtn.addEventListener('click', () => {
   localStorage.removeItem(STORAGE_KEY);
   render();
 });
+
+
 
 // Keep the session clock ticking while the tab is open.
 setInterval(() => renderSessionClock(loadSets()), 30000);
