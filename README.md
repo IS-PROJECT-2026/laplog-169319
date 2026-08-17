@@ -12,6 +12,28 @@ history — all stored locally in the browser via `localStorage`.
 - **7-day volume chart** — total `weight × reps` per day, last 7 days.
 - **History list** — every set you've logged, most recent first.
 
+## Live demo
+
+[View LapLog live](https://IS-PROJECT-2026.github.io/laplog-<ADMISSION_NUMBER>/)
+
+## Project structure
+
+\`\`\`
+index.html   — markup and layout
+style.css    — theme, layout, component styles
+script.js    — data layer, rendering, event handlers
+\`\`\`
+
+## Roadmap
+
+- [x] Core logging (exercise, weight, reps)
+- [x] Session clock and lap-track progress indicator
+- [x] Streak tracking
+- [x] 7-day volume chart
+- [x] Personal record badges
+- [ ] Export history as CSV
+- [ ] Per-exercise progress graphs
+
 ## Tech
 
 Plain HTML, CSS, and JavaScript — no build step, no framework, no backend.
