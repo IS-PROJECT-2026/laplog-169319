@@ -1,1 +1,1 @@
-# Changelog\n\n## 0.1.0\n- First version
+# Changelog\n\n## v0.1\n- Initial release
