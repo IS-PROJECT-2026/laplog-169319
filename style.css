@@ -346,15 +346,23 @@ body {
   .hero-time { font-size: 48px; }
 }
 
-.hi-badge {
-  display: inline-block;
-  margin-top: 4px;
-  padding: 2px 6px;
-  width: fit-content;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--navy-950);
-  background: var(--lime);
-  border-radius: 4px;
+.field-group input:hover {
+  border-color: var(--navy-700);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+@keyframes flash-log {
+  0% { box-shadow: 0 0 0 0 rgba(214, 255, 63, 0.5); }
+  100% { box-shadow: 0 0 0 8px rgba(214, 255, 63, 0); }
+}
+
+.panel.just-logged {
+  animation: flash-log 0.6s ease-out;
+}
+
+@media (max-width: 380px) {
+  .field-row { flex-direction: column; gap: 14px; }
 }

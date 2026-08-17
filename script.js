@@ -18,7 +18,15 @@ const els = {
   volumeChart: document.getElementById('volumeChart'),
   historyList: document.getElementById('historyList'),
   clearBtn: document.getElementById('clearBtn'),
+  exerciseSuggestions: document.getElementById('exerciseSuggestions'),
 };
+
+function renderExerciseSuggestions(sets) {
+  const unique = [...new Set(sets.map(s => s.exercise))];
+  els.exerciseSuggestions.innerHTML = unique
+    .map(name => `<option value="${name.replace(/"/g, '&quot;')}"></option>`)
+    .join('');
+}
 
 function loadSets() {
   try {
@@ -71,6 +79,7 @@ function render() {
   renderStreak(sets);
   renderVolumeChart(sets);
   renderHistory(sets);
+  renderExerciseSuggestions(sets); 
 }
 
 function renderSessionClock(sets) {
@@ -224,13 +233,20 @@ function computePersonalBests(sets) {
 els.logForm.addEventListener('submit', (event) => {
   event.preventDefault();
 
-  const exercise = els.exercise.value.trim();
-  const weight = parseFloat(els.weight.value);
-  const reps = parseInt(els.reps.value, 10);
-
-  if (!exercise || Number.isNaN(weight) || Number.isNaN(reps)) {
+  if (!els.logForm.checkValidity()) {
+    els.logForm.reportValidity();
     return;
   }
+
+  const exercise = els.exercise.value.trim();
+  const weight = parseFloat(els.weight.value);
+  const repsRaw = els.reps.value;
+
+  if (!exercise || Number.isNaN(weight) || !/^\d+$/.test(repsRaw)) {
+    return;
+  }
+
+  const reps = parseInt(repsRaw, 10);
 
   const sets = loadSets();
   sets.push(sanitizeSet({ exercise, weight, reps }));
@@ -239,6 +255,10 @@ els.logForm.addEventListener('submit', (event) => {
   els.logForm.reset();
   els.exercise.focus();
   render();
+
+  const panel = document.getElementById('logPanel');
+  panel.classList.add('just-logged');
+  setTimeout(() => panel.classList.remove('just-logged'), 650);
 });
 
 els.clearBtn.addEventListener('click', () => {
