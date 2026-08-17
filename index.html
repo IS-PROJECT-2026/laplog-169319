@@ -40,7 +40,8 @@
     <form id="logForm" class="log-form">
       <div class="field-group">
         <label for="exercise">Exercise</label>
-        <input type="text" id="exercise" placeholder="e.g. Back squat" required autocomplete="off">
+        <input type="text" id="exercise" placeholder="e.g. Back squat" required autocomplete="off" list="exerciseSuggestions">
+        <datalist id="exerciseSuggestions"></datalist>
       </div>
       <div class="field-row">
         <div class="field-group">
@@ -56,7 +57,7 @@
     </form>
   </section>
 
-  <section class="panel">
+  <section class="panel" id="logPanel">
     <div class="panel-header-row">
       <h2 class="panel-title">This week</h2>
       <span class="panel-title-sub" id="weekRange"></span>
