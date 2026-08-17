@@ -3,6 +3,7 @@
 
 const STORAGE_KEY = 'laplog:sets';
 const MAX_LAPS_VISIBLE = 12;
+const SCHEMA_VERSION = 1;
 
 const els = {
   streakValue: document.getElementById('streakValue'),
@@ -27,6 +28,17 @@ function loadSets() {
     console.error('Could not read saved sets', err);
     return [];
   }
+}
+
+function sanitizeSet({ exercise, weight, reps }) {
+  return {
+    id: Date.now(),
+    exercise: String(exercise).trim().slice(0, 60),
+    weight: Math.max(0, Math.round(parseFloat(weight) * 10) / 10),
+    reps: Math.max(1, Math.round(parseInt(reps, 10))),
+    timestamp: Date.now(),
+    schemaVersion: SCHEMA_VERSION,
+  };
 }
 
 function saveSets(sets) {
@@ -198,13 +210,7 @@ els.logForm.addEventListener('submit', (event) => {
   }
 
   const sets = loadSets();
-  sets.push({
-    id: Date.now(),
-    exercise,
-    weight,
-    reps,
-    timestamp: Date.now(),
-  });
+  sets.push(sanitizeSet({ exercise, weight, reps }));
   saveSets(sets);
 
   els.logForm.reset();
